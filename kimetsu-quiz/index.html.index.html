@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鬼灭之刃人物测试</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft YaHei", sans-serif;
+    background: radial-gradient(circle at 50% 0%, #1a1a2e, #0a0a14 70%);
+    color: #e8e8e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+  .card {
+    background: rgba(20,20,35,0.9);
+    border: 1px solid #3a2a4a;
+    border-radius: 16px;
+    padding: 32px 28px;
+    box-shadow: 0 0 40px rgba(120,60,180,0.15);
+  }
+  h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg,#7ec8e3,#c77dff,#ff9e6d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .sub { text-align: center; color: #888; font-size: 13px; margin-bottom: 24px; }
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #3a2a4a;
+    background: #12121f;
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 16px;
+  }
+  input:focus { border-color: #c77dff; }
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#6a4c93,#c77dff);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .err { color: #ff6b6b; text-align: center; font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .progress { color: #888; font-size: 13px; margin-bottom: 12px; }
+  .q { font-size: 18px; line-height: 1.6; margin-bottom: 20px; }
+  .opt {
+    padding: 14px 16px;
+    border: 1px solid #3a2a4a;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 15px;
+  }
+  .opt:hover { border-color: #c77dff; background: rgba(199,125,255,0.08); }
+  .result-name {
+    font-size: 28px;
+    text-align: center;
+    margin: 16px 0;
+    background: linear-gradient(90deg,#7ec8e3,#c77dff,#ff9e6d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .result-desc { color: #bbb; line-height: 1.8; font-size: 15px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="authCard" class="card">
+    <h1>鬼灭之刃人物测试</h1>
+    <p class="sub">请输入授权码后开始测试</p >
+    <input id="codeInput" type="text" placeholder="请输入授权码" maxlength="20">
+    <button id="authBtn" onclick="verifyCode()">验证并开始</button>
+    <p class="err" id="authErr"></p >
+  </div>
+
+  <div id="quizCard" class="card hidden">
+    <p class="progress" id="progress"></p >
+    <p class="q" id="question"></p >
+    <div id="options"></div>
+  </div>
+
+  <div id="resultCard" class="card hidden">
+    <p class="sub">你的结果是</p >
+    <p class="result-name" id="resultName"></p >
+    <p class="result-desc" id="resultDesc"></p >
+    <button style="margin-top:24px" onclick="location.reload()">重新测试</button>
+  </div>
+
+</div>
+
+<script>
+// ============ 题库 ============
+const QUESTIONS = [
+  { q: "遇到陌生人受伤，你会？", a: [["立刻上前帮忙", "tanjiro"], ["先观察情况再说", "giyu"], ["假装没看见", "inosuke"], ["吓得躲起来", "zenitsu"]] },
+  { q: "和朋友相处时，你通常是？", a: [["照顾大家情绪", "tanjiro"], ["安静听别人说", "giyu"], ["大大咧咧闹腾", "inosuke"], ["容易被吓到", "zenitsu"]] },
+  { q: "面对强敌时你的第一反应？", a: [["保护身边的人", "tanjiro"], ["冷静分析弱点", "giyu"], ["直接冲上去", "inosuke"], ["先害怕再硬撑", "zenitsu"]] },
+  { q: "别人夸你时你会？", a: [["害羞地感谢", "tanjiro"], ["面无表情点头", "giyu"], ["大声得意", "inosuke"], ["慌乱否认", "zenitsu"]] },
+  { q: "你更喜欢哪种环境？", a: [["热闹的人群", "inosuke"], ["安静的山林", "giyu"], ["温暖的家", "tanjiro"], ["熟悉的小圈子", "zenitsu"]] },
+  { q: "做决定时你更依赖？", a: [["内心直觉", "tanjiro"], ["逻辑分析", "giyu"], ["当下冲动", "inosuke"], ["别人的建议", "zenitsu"]] },
+  { q: "你最受不了别人？", a: [["欺负弱者", "tanjiro"], ["吵闹喧哗", "giyu"], ["拐弯抹角", "inosuke"], ["突然吓人", "zenitsu"]] },
+  { q: "休息日你更想？", a: [["陪家人", "tanjiro"], ["独自练剑", "giyu"], ["上山探险", "inosuke"], ["睡觉", "zenitsu"]] },
+  { q: "你的说话风格？", a: [["温和有礼", "tanjiro"], ["简短寡言", "giyu"], ["直来直去", "inosuke"], ["话多且慌", "zenitsu"]] },
+  { q: "遇到不公平的事你会？", a: [["站出来制止", "tanjiro"], ["默默观察再行动", "giyu"], ["直接动手", "inosuke"], ["心里不满但不敢说", "zenitsu"]] },
+  { q: "你更看重？", a: [["善良", "tanjiro"], ["责任", "giyu"], ["自由", "inosuke"], ["安全", "zenitsu"]] },
+  { q: "你的战斗风格更像？", a: [["稳扎稳打", "tanjiro"], ["精准一击", "giyu"], ["狂野乱砍", "inosuke"], ["快而慌乱", "zenitsu"]] },
+  { q: "朋友难过时你会？", a: [["耐心安慰", "tanjiro"], ["安静陪着", "giyu"], ["拉他出去玩", "inosuke"], ["手足无措", "zenitsu"]] },
+  { q: "你最怕？", a: [["失去重要的人", "tanjiro"], ["辜负信任", "giyu"], ["被束缚", "inosuke"], ["突然的危险", "zenitsu"]] },
+  { q: "别人对你的评价常是？", a: [["温柔可靠", "tanjiro"], ["高冷难接近", "giyu"], ["野性十足", "inosuke"], ["胆小但善良", "zenitsu"]] },
+  { q: "你怎么面对失败？", a: [["反思后继续努力", "tanjiro"], ["沉默消化", "giyu"], ["不服气再来", "inosuke"], ["沮丧很久", "zenitsu"]] },
+  { q: "你更喜欢哪种食物？", a: [["家常饭菜", "tanjiro"], ["清淡简单", "giyu"], ["大口吃肉", "inosuke"], ["甜食", "zenitsu"]] },
+  { q: "你的专注力？", a: [["持久稳定", "tanjiro"], ["高度集中", "giyu"], ["时好时坏", "inosuke"], ["容易被分散", "zenitsu"]] },
+  { q: "面对规则你会？", a: [["尊重并遵守", "tanjiro"], ["按自己判断", "giyu"], ["不太在意", "inosuke"], ["老实遵守", "zenitsu"]] },
+  { q: "你希望别人怎么记住你？", a: [["善良的人", "tanjiro"], ["可靠的人", "giyu"], ["自由的人", "inosuke"], ["真诚的人", "zenitsu"]] }
+];
+
+// ============ 结果角色 ============
+const RESULTS = {
+  tanjiro: { name: "灶门炭治郎", desc: "温柔而坚定，心怀善意，即使面对再大的苦难也不放弃。你总是把别人放在自己前面，是那种让人安心的存在。" },
+  giyu:    { name: "富冈义勇",   desc: "冷静、寡言、可靠。你不擅长表达，但行动说明一切。你对自己要求极高，常常独自承担，其实内心比谁都温柔。" },
+  inosuke: { name: "嘴平伊之助", desc: "直率、野性、充满生命力。你想说什么就说什么，想做什么就做什么，不被规则束缚，是团队里最有冲劲的存在。" },
+  zenitsu: { name: "我妻善逸",   desc: "胆小、爱哭、容易慌，但关键时刻从不退缩。你嘴上说着害怕，身体却会冲上去，这份真诚比什么都珍贵。" }
+};
+
+// ============ 状态 ============
+let scores = { tanjiro: 0, giyu: 0, inosuke: 0, zenitsu: 0 };
+let current = 0;
+let verified = false;
+
+// ============ 授权码验证 ============
+async function verifyCode() {
+  const code = document.getElementById('codeInput').value.trim();
+  const btn = document.getElementById('authBtn');
+  const err = document.getElementById('authErr');
+
+  if (!code) { err.textContent = '请输入授权码'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '验证中...';
+  err.textContent = '';
+
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      verified = true;
+      document.getElementById('authCard').classList.add('hidden');
+      document.getElementById('quizCard').classList.remove('hidden');
+      renderQuestion();
+    } else {
+      err.textContent = '授权码错误，请重新输入';
+    }
+  } catch (e) {
+    err.textContent = '网络错误，请稍后再试';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '验证并开始';
+  }
+}
+
+// ============ 渲染题目 ============
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  document.getElementById('progress').textContent = `第 ${current + 1} / ${QUESTIONS.length} 题`;
+  document.getElementById('question').textContent = q.q;
+
+  const box = document.getElementById('options');
+  box.innerHTML = '';
+  q.a.forEach(([text, key]) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.textContent = text;
+    div.onclick = () => choose(key);
+    box.appendChild(div);
+  });
+}
+
+// ============ 选择答案 ============
+function choose(key) {
+  scores[key]++;
+  current++;
+  if (current < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// ============ 显示结果 ============
+function showResult() {
+  let top = 'tanjiro';
+  let max = -1;
+  for (const k in scores) {
+    if (scores[k] > max) { max = scores[k]; top = k; }
+  }
+  document.getElementById('quizCard').classList.add('hidden');
+  document.getElementById('resultCard').classList.remove('hidden');
+  document.getElementById('resultName').textContent = RESULTS[top].name;
+  document.getElementById('resultDesc').textContent = RESULTS[top].desc;
+}
+
+// 回车直接验证
+document.getElementById('codeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') verifyCode();
+});
+</script>
+</body>
+</html>

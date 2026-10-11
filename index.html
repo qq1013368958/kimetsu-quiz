@@ -7,84 +7,117 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-  background: #0a0505;
-  color: #e8e8e8;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  position: relative;
-  overflow-x: hidden;
-}
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #05070f;
+    color: #e8e8e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
 
-/* 火焰橙红背景 */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 50% 110%, rgba(255, 90, 30, 0.55), transparent 55%),
-    radial-gradient(circle at 15% 90%, rgba(255, 140, 40, 0.35), transparent 50%),
-    radial-gradient(circle at 85% 95%, rgba(255, 60, 20, 0.4), transparent 50%),
-    radial-gradient(circle at 50% 0%, rgba(120, 20, 10, 0.5), transparent 60%),
-    linear-gradient(180deg, #0a0202 0%, #1a0604 45%, #2a0a05 75%, #3a1006 100%);
-  z-index: -2;
-  animation: fireGlow 6s ease-in-out infinite;
-}
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255, 200, 100, 0.18), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(120, 160, 255, 0.12), transparent 55%),
+      radial-gradient(circle at 10% 90%, rgba(80, 40, 120, 0.35), transparent 50%),
+      radial-gradient(circle at 90% 85%, rgba(40, 60, 120, 0.35), transparent 50%),
+      linear-gradient(180deg, #05070f 0%, #0a1020 50%, #05070f 100%);
+    z-index: -2;
+  }
 
-/* 飘动的火星 */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(2px 2px at 20% 80%, rgba(255, 180, 80, 0.9), transparent),
-    radial-gradient(1.5px 1.5px at 40% 60%, rgba(255, 120, 40, 0.8), transparent),
-    radial-gradient(2px 2px at 65% 75%, rgba(255, 200, 100, 0.85), transparent),
-    radial-gradient(1.5px 1.5px at 80% 55%, rgba(255, 100, 30, 0.8), transparent),
-    radial-gradient(1.5px 1.5px at 10% 50%, rgba(255, 160, 60, 0.7), transparent),
-    radial-gradient(2px 2px at 90% 85%, rgba(255, 220, 120, 0.8), transparent);
-  animation: emberFloat 9s ease-in-out infinite;
-  z-index: -1;
-}
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 20%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 28% 45%, rgba(255,220,150,0.8), transparent),
+      radial-gradient(1px 1px at 45% 15%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(2px 2px at 62% 35%, rgba(255,200,100,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 88% 60%, rgba(200,220,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 18% 75%, rgba(255,220,150,0.7), transparent),
+      radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 72% 92%, rgba(255,200,100,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 35% 92%, rgba(200,220,255,0.6), transparent);
+    animation: starTwinkle 5s ease-in-out infinite;
+    z-index: -1;
+  }
 
-@keyframes fireGlow {
-  0%, 100% { opacity: 0.9; }
-  50% { opacity: 1; }
-}
+  @keyframes starTwinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
 
-@keyframes emberFloat {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50% { transform: translateY(-20px); opacity: 1; }
-}
+  .petals {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #ffd6e8, #ff9ec4);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.7;
+    animation: petalFall linear infinite;
+  }
+  @keyframes petalFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
 
-/* 卡片也调成暖色调 */
-.card {
-  background: rgba(22, 10, 8, 0.92);
-  border: 1px solid rgba(255, 120, 50, 0.3);
-  border-radius: 20px;
-  padding: 32px 26px;
-  box-shadow: 0 0 60px rgba(255, 80, 20, 0.2);
-  backdrop-filter: blur(8px);
-  position: relative;
-}
+  .wrap { width: 100%; max-width: 560px; position: relative; z-index: 1; }
 
-.card::before {
-  content: "";
-  position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border: 1px solid rgba(255, 180, 100, 0.15);
-  border-radius: 14px;
-  pointer-events: none;
-}
+  .card {
+    background: rgba(12, 14, 24, 0.94);
+    border: 1px solid rgba(180, 140, 70, 0.35);
+    border-radius: 16px;
+    padding: 30px 24px;
+    box-shadow:
+      0 0 40px rgba(255, 190, 90, 0.08),
+      inset 0 0 30px rgba(255, 190, 90, 0.03);
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 22px; height: 22px;
+    border-top: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-left: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-top-left-radius: 8px;
+    pointer-events: none;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    bottom: 8px; right: 8px;
+    width: 22px; height: 22px;
+    border-bottom: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-right: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-bottom-right-radius: 8px;
+    pointer-events: none;
+  }
+
   h1 {
     font-size: 26px;
     text-align: center;
     margin-bottom: 10px;
-    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
+    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: 2px;
@@ -92,7 +125,7 @@ body::after {
 
   .sub {
     text-align: center;
-    color: #999;
+    color: #9aa0b5;
     font-size: 13px;
     margin-bottom: 24px;
     line-height: 1.7;
@@ -102,8 +135,8 @@ body::after {
     width: 100%;
     padding: 14px 16px;
     border-radius: 12px;
-    border: 1px solid rgba(160, 100, 220, 0.35);
-    background: rgba(10, 10, 22, 0.9);
+    border: 1px solid rgba(180, 140, 70, 0.35);
+    background: rgba(10, 12, 22, 0.9);
     color: #fff;
     font-size: 16px;
     letter-spacing: 3px;
@@ -113,8 +146,8 @@ body::after {
     transition: 0.2s;
   }
   input:focus {
-    border-color: #c77dff;
-    box-shadow: 0 0 16px rgba(199, 125, 255, 0.3);
+    border-color: rgba(255, 200, 100, 0.8);
+    box-shadow: 0 0 16px rgba(255, 200, 100, 0.25);
   }
 
   button {
@@ -122,14 +155,15 @@ body::after {
     padding: 14px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg, #6a4c93, #c77dff);
-    color: #fff;
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
+    color: #1a1208;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
     letter-spacing: 1px;
   }
-  button:hover { opacity: 0.88; box-shadow: 0 0 20px rgba(199,125,255,0.4); }
+  button:hover { opacity: 0.9; box-shadow: 0 0 22px rgba(255, 200, 100, 0.35); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .err {
@@ -140,13 +174,12 @@ body::after {
     min-height: 18px;
   }
 
-  /* 答题页 */
   .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
-    color: #aaa;
+    color: #9aa0b5;
     margin-bottom: 12px;
   }
   .progress-track {
@@ -160,7 +193,7 @@ body::after {
   .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
     transition: width 0.3s ease;
   }
 
@@ -172,20 +205,23 @@ body::after {
   }
 
   .opt {
-    padding: 15px 16px;
-    border: 1px solid rgba(160, 100, 220, 0.25);
+    padding: 15px 18px;
+    border: 1px solid rgba(120, 130, 160, 0.35);
     border-radius: 12px;
     margin-bottom: 10px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.25s;
     font-size: 15px;
     line-height: 1.6;
-    color: #ddd;
+    color: #d8dce8;
+    background: rgba(20, 22, 34, 0.6);
   }
   .opt:hover {
-    border-color: #c77dff;
-    background: rgba(199, 125, 255, 0.1);
-    transform: translateX(4px);
+    border-color: rgba(255, 200, 100, 0.75);
+    background: rgba(255, 200, 100, 0.08);
+    color: #fff;
+    transform: translateX(3px);
+    box-shadow: 0 0 18px rgba(255, 200, 100, 0.15);
   }
 
   .nav {
@@ -197,23 +233,24 @@ body::after {
     width: auto;
     padding: 10px 22px;
     font-size: 14px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(160,100,220,0.3);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(180,140,70,0.3);
+    color: #d8dce8;
+    font-weight: normal;
   }
-  .nav button:hover { background: rgba(199,125,255,0.15); }
+  .nav button:hover { background: rgba(255,200,100,0.12); }
   .nav button:disabled { opacity: 0.25; }
 
-  /* 结果页 */
   .result-emoji {
     font-size: 64px;
     text-align: center;
     margin-bottom: 6px;
-    filter: drop-shadow(0 0 20px rgba(199,125,255,0.5));
+    filter: drop-shadow(0 0 20px rgba(255,200,100,0.5));
   }
   .result-title {
     text-align: center;
     font-size: 15px;
-    color: #c9a86a;
+    color: #d4a24c;
     letter-spacing: 4px;
     margin-bottom: 6px;
   }
@@ -221,38 +258,37 @@ body::after {
     font-size: 30px;
     text-align: center;
     margin-bottom: 14px;
-    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
+    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: 2px;
   }
   .result-quote {
     text-align: center;
-    color: #c9a86a;
+    color: #d4a24c;
     font-size: 14px;
     margin-bottom: 22px;
     font-style: italic;
   }
   .block {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(160,100,220,0.15);
+    background: rgba(20, 22, 34, 0.6);
+    border: 1px solid rgba(120, 130, 160, 0.25);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 14px;
   }
   .block-title {
-    color: #c9a86a;
+    color: #d4a24c;
     font-size: 14px;
     margin-bottom: 10px;
     letter-spacing: 1px;
   }
   .block-content {
-    color: #ccc;
+    color: #c8ccd8;
     font-size: 14px;
     line-height: 1.9;
   }
 
-  /* 六维条 */
   .stat-row {
     display: flex;
     align-items: center;
@@ -261,7 +297,7 @@ body::after {
   }
   .stat-label {
     width: 70px;
-    color: #aaa;
+    color: #9aa0b5;
     flex-shrink: 0;
   }
   .stat-bar {
@@ -274,13 +310,13 @@ body::after {
   }
   .stat-fill {
     height: 100%;
-    background: linear-gradient(90deg, #c77dff, #ffb86b);
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
     border-radius: 4px;
   }
   .stat-num {
     width: 34px;
     text-align: right;
-    color: #ffb86b;
+    color: #ffd280;
     font-weight: bold;
   }
 
@@ -288,78 +324,339 @@ body::after {
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div id="authCard" class="card">
-    <h1>鬼灭之刃人物测试</h1>
-    <p class="sub">
-      36 道题 · 约 3 分钟 · 16 位角色<br>
-      输入授权码，测出你灵魂里住着哪位剑士
-    </p >
-    <input id="codeInput" type="text" placeholder="请输入授权码" maxlength="20">
-    <button id="authBtn" onclick="verifyCode()">开始测试 ⚔️</button>
-    <p class="err" id="authErr"></p >
-  </div>
+<div class="petals" id="petals"></div>
 
-  <div id="quizCard" class="card hidden">
-    <div class="topbar">
-      <span id="progressText">第 1 / 36 题</span>
-      <span id="progressPercent">0%</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <p class="q" id="question"></p >
-    <div id="options"></div>
-    <div class="nav">
-      <button id="prevBtn" onclick="prevQuestion()">← 上一题</button>
-      <button id="nextHint" disabled>选择答案后继续</button>
-    </div>
-  </div>
+<div class="wrap"><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鬼灭之刃人物测试</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <div id="resultCard" class="card hidden">
-    <div class="result-emoji" id="resultEmoji"></div>
-    <div class="result-title" id="resultTitle"></div>
-    <div class="result-name" id="resultName"></div>
-    <div class="result-quote" id="resultQuote"></div>
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #05070f;
+    color: #e8e8e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
 
-    <div class="block">
-      <div class="block-title">📜 角色画像</div>
-      <div class="block-content" id="resultProfile"></div>
-    </div>
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255, 200, 100, 0.18), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(120, 160, 255, 0.12), transparent 55%),
+      radial-gradient(circle at 10% 90%, rgba(80, 40, 120, 0.35), transparent 50%),
+      radial-gradient(circle at 90% 85%, rgba(40, 60, 120, 0.35), transparent 50%),
+      linear-gradient(180deg, #05070f 0%, #0a1020 50%, #05070f 100%);
+    z-index: -2;
+  }
 
-    <div class="block">
-      <div class="block-title">💬 名台词</div>
-      <div class="block-content" id="resultLine"></div>
-    </div>
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 20%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 28% 45%, rgba(255,220,150,0.8), transparent),
+      radial-gradient(1px 1px at 45% 15%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(2px 2px at 62% 35%, rgba(255,200,100,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 88% 60%, rgba(200,220,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 18% 75%, rgba(255,220,150,0.7), transparent),
+      radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 72% 92%, rgba(255,200,100,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 35% 92%, rgba(200,220,255,0.6), transparent);
+    animation: starTwinkle 5s ease-in-out infinite;
+    z-index: -1;
+  }
 
-    <div class="block">
-      <div class="block-title">🏙️ 现实里的你</div>
-      <div class="block-content" id="resultReal"></div>
-    </div>
+  @keyframes starTwinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
 
-    <div class="block">
-      <div class="block-title">🎬 小剧场</div>
-      <div class="block-content" id="resultStory"></div>
-    </div>
+  .petals {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #ffd6e8, #ff9ec4);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.7;
+    animation: petalFall linear infinite;
+  }
+  @keyframes petalFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
 
-    <div class="block">
-      <div class="block-title">📊 六维速览</div>
-      <div id="statsBox"></div>
-    </div>
+  .wrap { width: 100%; max-width: 560px; position: relative; z-index: 1; }
 
-    <button style="margin-top:10px" onclick="shareResult()">分享结果 📤</button>
-    <button style="margin-top:10px; background: rgba(255,255,255,0.08); border:1px solid rgba(160,100,220,0.3);" onclick="location.reload()">重新测试 🔄</button>
-    <p class="sub" style="margin-top:16px; font-size:12px;">
-      云间小答卷 · 娱乐向同人性格测试 · 与官方无关<br>
-      结果仅供玩梗参考，数据只存在你自己的设备里 🔒
-    </p >
-  </div>
+  .card {
+    background: rgba(12, 14, 24, 0.94);
+    border: 1px solid rgba(180, 140, 70, 0.35);
+    border-radius: 16px;
+    padding: 30px 24px;
+    box-shadow:
+      0 0 40px rgba(255, 190, 90, 0.08),
+      inset 0 0 30px rgba(255, 190, 90, 0.03);
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 22px; height: 22px;
+    border-top: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-left: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-top-left-radius: 8px;
+    pointer-events: none;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    bottom: 8px; right: 8px;
+    width: 22px; height: 22px;
+    border-bottom: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-right: 1.5px solid rgba(220, 170, 80, 0.7);
+    border-bottom-right-radius: 8px;
+    pointer-events: none;
+  }
 
-</div>
+  h1 {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
 
-<script>// ============ 36 道题库 ============
-// 每个选项对应 16 个角色之一的加分
+  .sub {
+    text-align: center;
+    color: #9aa0b5;
+    font-size: 13px;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(180, 140, 70, 0.35);
+    background: rgba(10, 12, 22, 0.9);
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 16px;
+    transition: 0.2s;
+  }
+  input:focus {
+    border-color: rgba(255, 200, 100, 0.8);
+    box-shadow: 0 0 16px rgba(255, 200, 100, 0.25);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
+    color: #1a1208;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    letter-spacing: 1px;
+  }
+  button:hover { opacity: 0.9; box-shadow: 0 0 22px rgba(255, 200, 100, 0.35); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .err {
+    color: #ff6b6b;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #9aa0b5;
+    margin-bottom: 12px;
+  }
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
+    transition: width 0.3s ease;
+  }
+
+  .q {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 22px;
+    color: #fff;
+  }
+
+  .opt {
+    padding: 15px 18px;
+    border: 1px solid rgba(120, 130, 160, 0.35);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #d8dce8;
+    background: rgba(20, 22, 34, 0.6);
+  }
+  .opt:hover {
+    border-color: rgba(255, 200, 100, 0.75);
+    background: rgba(255, 200, 100, 0.08);
+    color: #fff;
+    transform: translateX(3px);
+    box-shadow: 0 0 18px rgba(255, 200, 100, 0.15);
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+  }
+  .nav button {
+    width: auto;
+    padding: 10px 22px;
+    font-size: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(180,140,70,0.3);
+    color: #d8dce8;
+    font-weight: normal;
+  }
+  .nav button:hover { background: rgba(255,200,100,0.12); }
+  .nav button:disabled { opacity: 0.25; }
+
+  .result-emoji {
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 20px rgba(255,200,100,0.5));
+  }
+  .result-title {
+    text-align: center;
+    font-size: 15px;
+    color: #d4a24c;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+  }
+  .result-name {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+  .result-quote {
+    text-align: center;
+    color: #d4a24c;
+    font-size: 14px;
+    margin-bottom: 22px;
+    font-style: italic;
+  }
+  .block {
+    background: rgba(20, 22, 34, 0.6);
+    border: 1px solid rgba(120, 130, 160, 0.25);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .block-title {
+    color: #d4a24c;
+    font-size: 14px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .block-content {
+    color: #c8ccd8;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .stat-label {
+    width: 70px;
+    color: #9aa0b5;
+    flex-shrink: 0;
+  }
+  .stat-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+  }
+  .stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
+    border-radius: 4px;
+  }
+  .stat-num {
+    width: 34px;
+    text-align: right;
+    color: #ffd280;
+    font-weight: bold;
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="petals" id="petals"></div>
+
+<div class="wrap">// ============ 36 道题库 ============
 const QUESTIONS = [
   { q: "半夜刷到恐怖片片段，接下来你会——", a: [
     ["看完才反应过来：哦，刚才在演什么？", "muichiro"],
@@ -578,9 +875,6 @@ const QUESTIONS = [
     ["被爱的人记住", "mitsuri"]
   ]}
 ];// ============ 16 位角色数据 ============
-// title: 称号  emoji: 代表符号  quote: 名台词
-// profile: 角色画像  real: 现实里的你  story: 小剧场
-// base: 六维基础值（后面会根据答题微调）
 const RESULTS = {
   tanjiro: {
     name: "灶门炭治郎", emoji: "🔥", title: "日之呼吸 · 温柔剑士",
@@ -704,12 +998,10 @@ const RESULTS = {
   }
 };
 
-// ============ 状态 ============
 let scores = {};
-let answers = [];   // 记录每题选了谁
+let answers = [];
 let current = 0;
 
-// 初始化所有角色分数为 0
 Object.keys(RESULTS).forEach(function(k){ scores[k] = 0; });// ============ 授权码验证 ============
 async function verifyCode() {
   const code = document.getElementById('codeInput').value.trim();
@@ -745,7 +1037,7 @@ async function verifyCode() {
 function renderQuestion() {
   const q = QUESTIONS[current];
   document.getElementById('progressText').textContent = '第 ' + (current + 1) + ' / ' + QUESTIONS.length + ' 题';
-  const percent = Math.round(((current) / QUESTIONS.length) * 100);
+  const percent = Math.round((current / QUESTIONS.length) * 100);
   document.getElementById('progressPercent').textContent = percent + '%';
   document.getElementById('progressFill').style.width = percent + '%';
   document.getElementById('question').textContent = q.q;
@@ -756,23 +1048,21 @@ function renderQuestion() {
     const div = document.createElement('div');
     div.className = 'opt';
     div.textContent = item[0];
-    // 如果这题已经答过，高亮之前的选择
     if (answers[current] === idx) {
-      div.style.borderColor = '#c77dff';
-      div.style.background = 'rgba(199,125,255,0.12)';
+      div.style.borderColor = 'rgba(255,200,100,0.8)';
+      div.style.background = 'rgba(255,200,100,0.12)';
+      div.style.color = '#fff';
     }
     div.onclick = function() { choose(idx); };
     box.appendChild(div);
   });
 
-  // 上一题按钮状态
   document.getElementById('prevBtn').disabled = (current === 0);
-  // 下一题提示按钮
   const nextHint = document.getElementById('nextHint');
   if (answers[current] !== undefined) {
-    nextHint.textContent = '下一题 →';
+    nextHint.textContent = (current === QUESTIONS.length - 1) ? '查看结果 🎉' : '下一题 →';
     nextHint.disabled = false;
-    nextHint.onclick = nextQuestion;
+    nextHint.onclick = (current === QUESTIONS.length - 1) ? showResult : nextQuestion;
   } else {
     nextHint.textContent = '选择答案后继续';
     nextHint.disabled = true;
@@ -784,62 +1074,43 @@ function renderQuestion() {
 function choose(idx) {
   const q = QUESTIONS[current];
   const role = q.a[idx][1];
-
-  // 如果这题之前答过，先撤销上一次的加分
   if (answers[current] !== undefined) {
     const prevRole = q.a[answers[current]][1];
     scores[prevRole]--;
   }
-
   scores[role]++;
   answers[current] = idx;
 
-  // 高亮
   const opts = document.querySelectorAll('.opt');
   opts.forEach(function(el, i) {
     if (i === idx) {
-      el.style.borderColor = '#c77dff';
-      el.style.background = 'rgba(199,125,255,0.12)';
+      el.style.borderColor = 'rgba(255,200,100,0.8)';
+      el.style.background = 'rgba(255,200,100,0.12)';
+      el.style.color = '#fff';
     } else {
-      el.style.borderColor = 'rgba(160,100,220,0.25)';
-      el.style.background = 'transparent';
+      el.style.borderColor = 'rgba(120,130,160,0.35)';
+      el.style.background = 'rgba(20,22,34,0.6)';
+      el.style.color = '#d8dce8';
     }
   });
 
-  // 更新底部按钮
   const nextHint = document.getElementById('nextHint');
-  nextHint.textContent = '下一题 →';
+  nextHint.textContent = (current === QUESTIONS.length - 1) ? '查看结果 🎉' : '下一题 →';
   nextHint.disabled = false;
-  nextHint.onclick = nextQuestion;
-
-  // 如果是最后一题，自动改为“查看结果”
-  if (current === QUESTIONS.length - 1) {
-    nextHint.textContent = '查看结果 🎉';
-    nextHint.onclick = showResult;
-  }
+  nextHint.onclick = (current === QUESTIONS.length - 1) ? showResult : nextQuestion;
 }
 
-// ============ 上一题 / 下一题 ============
 function prevQuestion() {
-  if (current > 0) {
-    current--;
-    renderQuestion();
-  }
+  if (current > 0) { current--; renderQuestion(); }
 }
-
 function nextQuestion() {
   if (answers[current] === undefined) return;
-  if (current < QUESTIONS.length - 1) {
-    current++;
-    renderQuestion();
-  } else {
-    showResult();
-  }
+  if (current < QUESTIONS.length - 1) { current++; renderQuestion(); }
+  else { showResult(); }
 }
 
 // ============ 显示结果 ============
 function showResult() {
-  // 检查有没有漏题
   for (let i = 0; i < QUESTIONS.length; i++) {
     if (answers[i] === undefined) {
       current = i;
@@ -848,19 +1119,14 @@ function showResult() {
       return;
     }
   }
-
-  // 找出得分最高的角色
   let top = 'tanjiro';
   let max = -1;
   Object.keys(scores).forEach(function(k) {
     if (scores[k] > max) { max = scores[k]; top = k; }
   });
-
   const r = RESULTS[top];
-
   document.getElementById('quizCard').classList.add('hidden');
   document.getElementById('resultCard').classList.remove('hidden');
-
   document.getElementById('resultEmoji').textContent = r.emoji;
   document.getElementById('resultTitle').textContent = r.title;
   document.getElementById('resultName').textContent = r.name;
@@ -870,7 +1136,6 @@ function showResult() {
   document.getElementById('resultReal').textContent = r.real;
   document.getElementById('resultStory').textContent = r.story;
 
-  // 六维：以角色 base 值 + 一点答题浮动
   const base = r.base;
   const fluctuate = function(v) {
     return Math.max(20, Math.min(99, v + Math.floor(Math.random() * 9) - 4));
@@ -883,7 +1148,6 @@ function showResult() {
     { label: '心眼', value: fluctuate(base.mind) },
     { label: '行动力', value: fluctuate(base.action) }
   ];
-
   const statsBox = document.getElementById('statsBox');
   statsBox.innerHTML = '';
   stats.forEach(function(s) {
@@ -896,7 +1160,6 @@ function showResult() {
     statsBox.appendChild(row);
   });
 
-  // 记录当前结果，供分享用
   window.__resultText = '我在《鬼灭之刃人物测试》里测出来是：' +
     r.emoji + ' ' + r.name + '（' + r.title + '）\n' +
     r.quote + '\n' +
@@ -918,7 +1181,22 @@ function shareResult() {
   }
 }
 
-// 回车直接验证
+// ============ 樱花花瓣 ============
+(function makePetals() {
+  const box = document.getElementById('petals');
+  if (!box) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.opacity = (0.3 + Math.random() * 0.5);
+    p.style.transform = 'scale(' + (0.6 + Math.random() * 0.8) + ')';
+    box.appendChild(p);
+  }
+})();
+
 document.getElementById('codeInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') verifyCode();
 });

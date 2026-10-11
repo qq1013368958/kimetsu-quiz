@@ -6,82 +6,278 @@
 <title>鬼灭之刃人物测试</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
-    font-family: "Microsoft YaHei", sans-serif;
-    background: radial-gradient(circle at 50% 0%, #1a1a2e, #0a0a14 70%);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #0a0a14;
     color: #e8e8e8;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
+    position: relative;
+    overflow-x: hidden;
   }
+
+  /* 和风动态背景：深紫夜空 + 漂浮光点 + 水波纹 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(120, 60, 180, 0.25), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(255, 140, 80, 0.18), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(60, 120, 200, 0.22), transparent 50%),
+      linear-gradient(160deg, #0a0a14, #16102a 50%, #0a0a14);
+    z-index: -2;
+  }
+
+  /* 漂浮的光点 */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 15% 30%, rgba(255,220,150,0.8), transparent),
+      radial-gradient(2px 2px at 35% 65%, rgba(200,180,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 70% 25%, rgba(255,180,120,0.8), transparent),
+      radial-gradient(1.5px 1.5px at 85% 75%, rgba(160,200,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 55% 50%, rgba(255,255,255,0.6), transparent);
+    animation: float 8s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(-12px); opacity: 1; }
+  }
+
   .wrap { width: 100%; max-width: 560px; }
+
   .card {
-    background: rgba(20,20,35,0.9);
-    border: 1px solid #3a2a4a;
-    border-radius: 16px;
-    padding: 32px 28px;
-    box-shadow: 0 0 40px rgba(120,60,180,0.15);
+    background: rgba(18, 18, 32, 0.92);
+    border: 1px solid rgba(160, 100, 220, 0.25);
+    border-radius: 20px;
+    padding: 32px 26px;
+    box-shadow: 0 0 60px rgba(120, 60, 180, 0.18);
+    backdrop-filter: blur(8px);
+    position: relative;
   }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px solid rgba(255, 200, 120, 0.12);
+    border-radius: 14px;
+    pointer-events: none;
+  }
+
   h1 {
-    font-size: 24px;
+    font-size: 26px;
     text-align: center;
-    margin-bottom: 8px;
-    background: linear-gradient(90deg,#7ec8e3,#c77dff,#ff9e6d);
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
   }
-  .sub { text-align: center; color: #888; font-size: 13px; margin-bottom: 24px; }
+
+  .sub {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
   input {
     width: 100%;
     padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid #3a2a4a;
-    background: #12121f;
+    border-radius: 12px;
+    border: 1px solid rgba(160, 100, 220, 0.35);
+    background: rgba(10, 10, 22, 0.9);
     color: #fff;
     font-size: 16px;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-align: center;
     outline: none;
     margin-bottom: 16px;
+    transition: 0.2s;
   }
-  input:focus { border-color: #c77dff; }
+  input:focus {
+    border-color: #c77dff;
+    box-shadow: 0 0 16px rgba(199, 125, 255, 0.3);
+  }
+
   button {
     width: 100%;
     padding: 14px;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(90deg,#6a4c93,#c77dff);
+    border-radius: 12px;
+    background: linear-gradient(90deg, #6a4c93, #c77dff);
     color: #fff;
     font-size: 16px;
     cursor: pointer;
     transition: 0.2s;
+    letter-spacing: 1px;
   }
-  button:hover { opacity: 0.85; }
+  button:hover { opacity: 0.88; box-shadow: 0 0 20px rgba(199,125,255,0.4); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
-  .err { color: #ff6b6b; text-align: center; font-size: 13px; margin-top: 12px; min-height: 18px; }
-  .progress { color: #888; font-size: 13px; margin-bottom: 12px; }
-  .q { font-size: 18px; line-height: 1.6; margin-bottom: 20px; }
+
+  .err {
+    color: #ff6b6b;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+
+  /* 答题页 */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 12px;
+  }
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
+    transition: width 0.3s ease;
+  }
+
+  .q {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 22px;
+    color: #fff;
+  }
+
   .opt {
-    padding: 14px 16px;
-    border: 1px solid #3a2a4a;
-    border-radius: 10px;
+    padding: 15px 16px;
+    border: 1px solid rgba(160, 100, 220, 0.25);
+    border-radius: 12px;
     margin-bottom: 10px;
     cursor: pointer;
     transition: 0.2s;
     font-size: 15px;
+    line-height: 1.6;
+    color: #ddd;
   }
-  .opt:hover { border-color: #c77dff; background: rgba(199,125,255,0.08); }
-  .result-name {
-    font-size: 28px;
+  .opt:hover {
+    border-color: #c77dff;
+    background: rgba(199, 125, 255, 0.1);
+    transform: translateX(4px);
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+  }
+  .nav button {
+    width: auto;
+    padding: 10px 22px;
+    font-size: 14px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(160,100,220,0.3);
+  }
+  .nav button:hover { background: rgba(199,125,255,0.15); }
+  .nav button:disabled { opacity: 0.25; }
+
+  /* 结果页 */
+  .result-emoji {
+    font-size: 64px;
     text-align: center;
-    margin: 16px 0;
-    background: linear-gradient(90deg,#7ec8e3,#c77dff,#ff9e6d);
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 20px rgba(199,125,255,0.5));
+  }
+  .result-title {
+    text-align: center;
+    font-size: 15px;
+    color: #c9a86a;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+  }
+  .result-name {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, #7ec8e3, #c77dff, #ffb86b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
   }
-  .result-desc { color: #bbb; line-height: 1.8; font-size: 15px; }
+  .result-quote {
+    text-align: center;
+    color: #c9a86a;
+    font-size: 14px;
+    margin-bottom: 22px;
+    font-style: italic;
+  }
+  .block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(160,100,220,0.15);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .block-title {
+    color: #c9a86a;
+    font-size: 14px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .block-content {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  /* 六维条 */
+  .stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .stat-label {
+    width: 70px;
+    color: #aaa;
+    flex-shrink: 0;
+  }
+  .stat-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+  }
+  .stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c77dff, #ffb86b);
+    border-radius: 4px;
+  }
+  .stat-num {
+    width: 34px;
+    text-align: right;
+    color: #ffb86b;
+    font-weight: bold;
+  }
+
   .hidden { display: none; }
 </style>
 </head>
@@ -90,62 +286,425 @@
 
   <div id="authCard" class="card">
     <h1>鬼灭之刃人物测试</h1>
-    <p class="sub">请输入授权码后开始测试</p >
+    <p class="sub">
+      36 道题 · 约 3 分钟 · 16 位角色<br>
+      输入授权码，测出你灵魂里住着哪位剑士
+    </p >
     <input id="codeInput" type="text" placeholder="请输入授权码" maxlength="20">
-    <button id="authBtn" onclick="verifyCode()">验证并开始</button>
+    <button id="authBtn" onclick="verifyCode()">开始测试 ⚔️</button>
     <p class="err" id="authErr"></p >
   </div>
 
   <div id="quizCard" class="card hidden">
-    <p class="progress" id="progress"></p >
+    <div class="topbar">
+      <span id="progressText">第 1 / 36 题</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
     <p class="q" id="question"></p >
     <div id="options"></div>
+    <div class="nav">
+      <button id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+      <button id="nextHint" disabled>选择答案后继续</button>
+    </div>
   </div>
 
   <div id="resultCard" class="card hidden">
-    <p class="sub">你的结果是</p >
-    <p class="result-name" id="resultName"></p >
-    <p class="result-desc" id="resultDesc"></p >
-    <button style="margin-top:24px" onclick="location.reload()">重新测试</button>
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-quote" id="resultQuote"></div>
+
+    <div class="block">
+      <div class="block-title">📜 角色画像</div>
+      <div class="block-content" id="resultProfile"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">💬 名台词</div>
+      <div class="block-content" id="resultLine"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">🏙️ 现实里的你</div>
+      <div class="block-content" id="resultReal"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">🎬 小剧场</div>
+      <div class="block-content" id="resultStory"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📊 六维速览</div>
+      <div id="statsBox"></div>
+    </div>
+
+    <button style="margin-top:10px" onclick="shareResult()">分享结果 📤</button>
+    <button style="margin-top:10px; background: rgba(255,255,255,0.08); border:1px solid rgba(160,100,220,0.3);" onclick="location.reload()">重新测试 🔄</button>
+    <p class="sub" style="margin-top:16px; font-size:12px;">
+      云间小答卷 · 娱乐向同人性格测试 · 与官方无关<br>
+      结果仅供玩梗参考，数据只存在你自己的设备里 🔒
+    </p >
   </div>
 
 </div>
 
-<script>
-// ============ 题库 ============
+<script>// ============ 36 道题库 ============
+// 每个选项对应 16 个角色之一的加分
 const QUESTIONS = [
-  { q: "遇到陌生人受伤，你会？", a: [["立刻上前帮忙", "tanjiro"], ["先观察情况再说", "giyu"], ["假装没看见", "inosuke"], ["吓得躲起来", "zenitsu"]] },
-  { q: "和朋友相处时，你通常是？", a: [["照顾大家情绪", "tanjiro"], ["安静听别人说", "giyu"], ["大大咧咧闹腾", "inosuke"], ["容易被吓到", "zenitsu"]] },
-  { q: "面对强敌时你的第一反应？", a: [["保护身边的人", "tanjiro"], ["冷静分析弱点", "giyu"], ["直接冲上去", "inosuke"], ["先害怕再硬撑", "zenitsu"]] },
-  { q: "别人夸你时你会？", a: [["害羞地感谢", "tanjiro"], ["面无表情点头", "giyu"], ["大声得意", "inosuke"], ["慌乱否认", "zenitsu"]] },
-  { q: "你更喜欢哪种环境？", a: [["热闹的人群", "inosuke"], ["安静的山林", "giyu"], ["温暖的家", "tanjiro"], ["熟悉的小圈子", "zenitsu"]] },
-  { q: "做决定时你更依赖？", a: [["内心直觉", "tanjiro"], ["逻辑分析", "giyu"], ["当下冲动", "inosuke"], ["别人的建议", "zenitsu"]] },
-  { q: "你最受不了别人？", a: [["欺负弱者", "tanjiro"], ["吵闹喧哗", "giyu"], ["拐弯抹角", "inosuke"], ["突然吓人", "zenitsu"]] },
-  { q: "休息日你更想？", a: [["陪家人", "tanjiro"], ["独自练剑", "giyu"], ["上山探险", "inosuke"], ["睡觉", "zenitsu"]] },
-  { q: "你的说话风格？", a: [["温和有礼", "tanjiro"], ["简短寡言", "giyu"], ["直来直去", "inosuke"], ["话多且慌", "zenitsu"]] },
-  { q: "遇到不公平的事你会？", a: [["站出来制止", "tanjiro"], ["默默观察再行动", "giyu"], ["直接动手", "inosuke"], ["心里不满但不敢说", "zenitsu"]] },
-  { q: "你更看重？", a: [["善良", "tanjiro"], ["责任", "giyu"], ["自由", "inosuke"], ["安全", "zenitsu"]] },
-  { q: "你的战斗风格更像？", a: [["稳扎稳打", "tanjiro"], ["精准一击", "giyu"], ["狂野乱砍", "inosuke"], ["快而慌乱", "zenitsu"]] },
-  { q: "朋友难过时你会？", a: [["耐心安慰", "tanjiro"], ["安静陪着", "giyu"], ["拉他出去玩", "inosuke"], ["手足无措", "zenitsu"]] },
-  { q: "你最怕？", a: [["失去重要的人", "tanjiro"], ["辜负信任", "giyu"], ["被束缚", "inosuke"], ["突然的危险", "zenitsu"]] },
-  { q: "别人对你的评价常是？", a: [["温柔可靠", "tanjiro"], ["高冷难接近", "giyu"], ["野性十足", "inosuke"], ["胆小但善良", "zenitsu"]] },
-  { q: "你怎么面对失败？", a: [["反思后继续努力", "tanjiro"], ["沉默消化", "giyu"], ["不服气再来", "inosuke"], ["沮丧很久", "zenitsu"]] },
-  { q: "你更喜欢哪种食物？", a: [["家常饭菜", "tanjiro"], ["清淡简单", "giyu"], ["大口吃肉", "inosuke"], ["甜食", "zenitsu"]] },
-  { q: "你的专注力？", a: [["持久稳定", "tanjiro"], ["高度集中", "giyu"], ["时好时坏", "inosuke"], ["容易被分散", "zenitsu"]] },
-  { q: "面对规则你会？", a: [["尊重并遵守", "tanjiro"], ["按自己判断", "giyu"], ["不太在意", "inosuke"], ["老实遵守", "zenitsu"]] },
-  { q: "你希望别人怎么记住你？", a: [["善良的人", "tanjiro"], ["可靠的人", "giyu"], ["自由的人", "inosuke"], ["真诚的人", "zenitsu"]] }
-];
-
+  { q: "半夜刷到恐怖片片段，接下来你会——", a: [
+    ["看完才反应过来：哦，刚才在演什么？", "muichiro"],
+    ["「就这？」顺手把音量调到最大", "sanemi"],
+    ["怕，但硬着头皮看完，还得自我安慰", "zenitsu"],
+    ["果断关掉，缩进被窝开启防御模式", "nezuko"]
+  ]},
+  { q: "朋友难过时，你的第一反应是——", a: [
+    ["耐心听完，然后轻轻拍拍他的背", "tanjiro"],
+    ["安静地陪着，不说多余的话", "giyu"],
+    ["拉他出去吃顿好的，边吃边吐槽", "mitsuri"],
+    ["直接问：谁欺负你了？我去收拾他", "sanemi"]
+  ]},
+  { q: "面对讨厌的人，你会——", a: [
+    ["表面客气，心里已经画好距离线", "shinobu"],
+    ["懒得装，直接冷脸", "sanemi"],
+    ["当没看见，绕开走", "muichiro"],
+    ["笑嘻嘻地阴阳回去", "tengen"]
+  ]},
+  { q: "你更喜欢哪种被夸的方式？", a: [
+    ["「你真的很温柔」", "tanjiro"],
+    ["「你很可靠，交给你放心」", "gyomei"],
+    ["「你这个人真有意思」", "tengen"],
+    ["「你比看起来强多了」", "sanemi"]
+  ]},
+  { q: "周末最想做的事是——", a: [
+    ["睡到自然醒，然后慢慢吃顿饭", "zenitsu"],
+    ["一个人去山里走走，安静待着", "giyu"],
+    ["约人出去玩，越热闹越好", "tengen"],
+    ["窝在家里看一整天番", "kanao"]
+  ]},
+  { q: "别人不小心踩到你，你会——", a: [
+    ["笑着说没事", "tanjiro"],
+    ["面无表情点点头", "muichiro"],
+    ["下意识瞪一眼", "sanemi"],
+    ["赶紧说对不起，明明不是你的错", "zenitsu"]
+  ]},
+  { q: "你觉得自己更像哪种动物？", a: [
+    ["忠犬，认定了就一直守着", "tanjiro"],
+    ["猫，高兴了才理人", "giyu"],
+    ["野猪，横冲直撞", "inosuke"],
+    ["蝴蝶，轻飘飘但不好惹", "shinobu"]
+  ]},
+  { q: "做决定时，你更依赖——", a: [
+    ["内心的直觉", "tanjiro"],
+    ["冷静的分析", "giyu"],
+    ["当下的冲动", "inosuke"],
+    ["别人的建议", "zenitsu"]
+  ]},
+  { q: "你最受不了别人——", a: [
+    ["欺负弱小", "tanjiro"],
+    ["吵吵嚷嚷", "giyu"],
+    ["拐弯抹角", "inosuke"],
+    ["突然吓你一跳", "zenitsu"]
+  ]},
+  { q: "如果只能带一样东西去旅行，你会带——", a: [
+    ["家人照片", "tanjiro"],
+    ["一把刀（防身）", "sanemi"],
+    ["好吃的", "mitsuri"],
+    ["什么都不带，轻装上阵", "muichiro"]
+  ]},
+  { q: "别人误会你时，你会——", a: [
+    ["耐心解释清楚", "tanjiro"],
+    ["懒得解释，随便吧", "giyu"],
+    ["直接怼回去", "sanemi"],
+    ["心里憋着，回家偷偷难过", "zenitsu"]
+  ]},
+  { q: "你更看重——", a: [
+    ["善良", "tanjiro"],
+    ["责任", "gyomei"],
+    ["自由", "inosuke"],
+    ["安全", "zenitsu"]
+  ]},
+  { q: "你的战斗风格更像——", a: [
+    ["稳扎稳打", "tanjiro"],
+    ["精准一击", "giyu"],
+    ["狂野乱砍", "inosuke"],
+    ["快而慌乱", "zenitsu"]
+  ]},
+  { q: "朋友聚会里，你通常是——", a: [
+    ["照顾大家情绪的那个人", "tanjiro"],
+    ["安静坐在角落的那个", "giyu"],
+    ["最闹腾的那个", "inosuke"],
+    ["被吓到尖叫的那个", "zenitsu"]
+  ]},
+  { q: "你最怕——", a: [
+    ["失去重要的人", "tanjiro"],
+    ["辜负别人的信任", "gyomei"],
+    ["被束缚", "inosuke"],
+    ["突然的危险", "zenitsu"]
+  ]},
+  { q: "别人对你的评价常是——", a: [
+    ["温柔可靠", "tanjiro"],
+    ["高冷难接近", "giyu"],
+    ["野性十足", "inosuke"],
+    ["胆小但善良", "zenitsu"]
+  ]},
+  { q: "你怎么面对失败？", a: [
+    ["反思后继续努力", "tanjiro"],
+    ["沉默消化", "giyu"],
+    ["不服气再来", "inosuke"],
+    ["沮丧很久", "zenitsu"]
+  ]},
+  { q: "你更喜欢哪种食物？", a: [
+    ["家常饭菜", "tanjiro"],
+    ["清淡简单", "giyu"],
+    ["大口吃肉", "inosuke"],
+    ["甜食", "zenitsu"]
+  ]},
+  { q: "你的专注力——", a: [
+    ["持久稳定", "tanjiro"],
+    ["高度集中", "giyu"],
+    ["时好时坏", "inosuke"],
+    ["容易被分散", "zenitsu"]
+  ]},
+  { q: "面对规则你会——", a: [
+    ["尊重并遵守", "tanjiro"],
+    ["按自己判断", "giyu"],
+    ["不太在意", "inosuke"],
+    ["老实遵守", "zenitsu"]
+  ]},
+  { q: "你希望别人怎么记住你？", a: [
+    ["善良的人", "tanjiro"],
+    ["可靠的人", "gyomei"],
+    ["自由的人", "inosuke"],
+    ["真诚的人", "zenitsu"]
+  ]},
+  { q: "如果可以拥有一项能力，你想要——", a: [
+    ["治愈他人", "tanjiro"],
+    ["隐身", "muichiro"],
+    ["超级力量", "inosuke"],
+    ["预知危险", "zenitsu"]
+  ]},
+  { q: "你更喜欢哪种天气？", a: [
+    ["阳光明媚", "mitsuri"],
+    ["细雨绵绵", "giyu"],
+    ["狂风暴雨", "sanemi"],
+    ["大雪纷飞", "muichiro"]
+  ]},
+  { q: "你收到礼物时——", a: [
+    ["认真道谢，珍藏起来", "tanjiro"],
+    ["淡淡点头，心里记着", "giyu"],
+    ["当场拆开，开心大叫", "mitsuri"],
+    ["手足无措，不知道怎么回应", "zenitsu"]
+  ]},
+  { q: "你更愿意——", a: [
+    ["保护别人", "tanjiro"],
+    ["独自承担", "gyomei"],
+    ["冲锋陷阵", "inosuke"],
+    ["被人保护", "zenitsu"]
+  ]},
+  { q: "深夜emo时你会——", a: [
+    ["写日记，慢慢梳理", "tanjiro"],
+    ["一个人待着，等它过去", "giyu"],
+    ["打游戏/运动发泄", "inosuke"],
+    ["找人聊天，哪怕只是听声音", "zenitsu"]
+  ]},
+  { q: "你更喜欢哪种人？", a: [
+    ["温柔的人", "tanjiro"],
+    ["可靠的人", "gyomei"],
+    ["有趣的人", "tengen"],
+    ["安静的人", "muichiro"]
+  ]},
+  { q: "你的笑点——", a: [
+    ["比较低，什么都觉得好笑", "mitsuri"],
+    ["很高，很少被逗笑", "giyu"],
+    ["奇怪，别人不懂你在笑什么", "muichiro"],
+    ["容易被吓笑", "zenitsu"]
+  ]},
+  { q: "你生气时——", a: [
+    ["先忍着，忍不住再说", "tanjiro"],
+    ["冷着脸不说话", "giyu"],
+    ["当场爆发", "sanemi"],
+    ["嘴上说没事，心里记着", "shinobu"]
+  ]},
+  { q: "你更怕——", a: [
+    ["孤独", "zenitsu"],
+    ["被误解", "giyu"],
+    ["无聊", "inosuke"],
+    ["失去控制", "muzan"]
+  ]},
+  { q: "别人向你求助，你会——", a: [
+    ["立刻答应", "tanjiro"],
+    ["先看情况", "giyu"],
+    ["嘴上抱怨但会帮", "sanemi"],
+    ["手足无措但尽力", "zenitsu"]
+  ]},
+  { q: "你更喜欢哪种礼物？", a: [
+    ["手写信", "tanjiro"],
+    ["实用物品", "giyu"],
+    ["好吃的", "mitsuri"],
+    ["意外的惊喜", "tengen"]
+  ]},
+  { q: "你觉得自己的优点是——", a: [
+    ["善良", "tanjiro"],
+    ["冷静", "giyu"],
+    ["直率", "inosuke"],
+    ["真诚", "zenitsu"]
+  ]},
+  { q: "你更愿意在团队里当——", a: [
+    ["协调者", "tanjiro"],
+    ["军师", "shinobu"],
+    ["先锋", "inosuke"],
+    ["后勤", "zenitsu"]
+  ]},
+  { q: "如果明天是世界末日，你会——", a: [
+    ["陪在家人身边", "tanjiro"],
+    ["一个人安静待着", "giyu"],
+    ["冲出去做想做的事", "inosuke"],
+    ["慌到不知道做什么", "zenitsu"]
+  ]},
+  { q: "你希望自己的结局是——", a: [
+    ["和重要的人一起变老", "tanjiro"],
+    ["完成使命后安静离开", "gyomei"],
+    ["自由自在地活到最后", "inosuke"],
+    ["被爱的人记住", "mitsuri"]
+  ]}
+];// ============ 16 位角色数据 ============
+// title: 称号  emoji: 代表符号  quote: 名台词
+// profile: 角色画像  real: 现实里的你  story: 小剧场
+// base: 六维基础值（后面会根据答题微调）
 const RESULTS = {
-  tanjiro: { name: "灶门炭治郎", desc: "温柔而坚定，心怀善意，即使面对再大的苦难也不放弃。你总是把别人放在自己前面，是那种让人安心的存在。" },
-  giyu:    { name: "富冈义勇",   desc: "冷静、寡言、可靠。你不擅长表达，但行动说明一切。你对自己要求极高，常常独自承担，其实内心比谁都温柔。" },
-  inosuke: { name: "嘴平伊之助", desc: "直率、野性、充满生命力。你想说什么就说什么，想做什么就做什么，不被规则束缚，是团队里最有冲劲的存在。" },
-  zenitsu: { name: "我妻善逸",   desc: "胆小、爱哭、容易慌，但关键时刻从不退缩。你嘴上说着害怕，身体却会冲上去，这份真诚比什么都珍贵。" }
+  tanjiro: {
+    name: "灶门炭治郎", emoji: "🔥", title: "日之呼吸 · 温柔剑士",
+    quote: "「不管多么绝望，我都不会放弃。」",
+    profile: "你是那种把温柔和坚韧揉在一起的人。别人难过时你会停下来听，遇到不公你会站出来。你不是天生强大，而是每一次跌倒后都选择再站起来。",
+    real: "现实里的你，是朋友圈里那个「有事可以找他」的人。你不一定话多，但你说的话有分量。记得，你也可以偶尔软弱，不用一直当那个扛事的人。",
+    story: "朋友深夜发来一句「我有点撑不住了」，你二话不说打了电话过去，陪他聊到凌晨三点。第二天你顶着黑眼圈上班，却觉得值得。",
+    base: { gentle: 95, passion: 80, power: 82, stable: 78, mind: 70, action: 85 }
+  },
+  nezuko: {
+    name: "灶门祢豆子", emoji: "🎀", title: "血鬼术 · 温柔守护者",
+    quote: "「唔——！」（用行动说话）",
+    profile: "你话不多，但你对在乎的人有一种近乎本能的保护欲。你不需要用语言证明什么，你的存在本身就是一种安心。",
+    real: "现实里的你不擅长表达感情，但你会记得朋友随口说过的喜好，会在他需要的时候默默出现。你是那种「不说，但都做了」的人。",
+    story: "你发现室友最近总吃泡面，什么也没说，第二天开始每天多做一个人的饭，放在桌上，装作随手做的。",
+    base: { gentle: 92, passion: 70, power: 88, stable: 75, mind: 60, action: 78 }
+  },
+  zenitsu: {
+    name: "我妻善逸", emoji: "⚡", title: "雷之呼吸 · 胆小的勇者",
+    quote: "「我虽然害怕，但我不会逃。」",
+    profile: "你胆小、爱哭、容易慌，但关键时刻从不退缩。你嘴上说着害怕，身体却会冲上去。这份真诚，比什么都珍贵。",
+    real: "现实里的你，是那种嘴上抱怨「好烦啊不想干了」，但最后还是会把事情做完的人。你的勇气不是不害怕，而是害怕了还继续往前走。",
+    story: "明明最怕黑，却在朋友说「陪我走一段夜路」的时候，一边哆嗦一边说「行吧行吧」，然后紧紧抓着对方的袖子走完全程。",
+    base: { gentle: 80, passion: 65, power: 75, stable: 40, mind: 55, action: 60 }
+  },
+  inosuke: {
+    name: "嘴平伊之助", emoji: "🐗", title: "兽之呼吸 · 野生直觉",
+    quote: "「老子最强！」",
+    profile: "你直率、野性、充满生命力。你想说什么就说什么，想做什么就做什么，不被规则束缚，是团队里最有冲劲的存在。",
+    real: "现实里的你，是那种「想到就去做」的人。你不喜欢绕弯子，讨厌拖泥带水。有时候你太直接会伤到人，但认识你的人都懂，你没有坏心。",
+    story: "看到朋友被欺负，你二话不说冲上去，事后被问「你不怕吗」，你挠挠头说：「没想那么多。」",
+    base: { gentle: 55, passion: 95, power: 90, stable: 60, mind: 45, action: 95 }
+  },
+  giyu: {
+    name: "富冈义勇", emoji: "💧", title: "水之呼吸 · 沉默的水柱",
+    quote: "「我没有被讨厌。」",
+    profile: "你冷静、寡言、可靠。你不擅长表达，但行动说明一切。你对自己要求极高，常常独自承担，其实内心比谁都温柔。",
+    real: "现实里的你，不太会主动找人聊天，但别人找你帮忙你从不拒绝。你不是冷漠，只是不知道怎么开口。你习惯把情绪收起来，自己消化。",
+    story: "聚会上你话最少，但散场时你默默把喝多的人一个个送回家，第二天谁也不提。",
+    base: { gentle: 75, passion: 60, power: 88, stable: 90, mind: 85, action: 70 }
+  },
+  shinobu: {
+    name: "蝴蝶忍", emoji: "🦋", title: "虫之呼吸 · 微笑的毒",
+    quote: "「生气是浪费力气，不如笑着解决。」",
+    profile: "你外表温和，内心清醒。你擅长用微笑和礼貌包裹自己的真实情绪，但在关键时刻，你比谁都果断。",
+    real: "现实里的你，是那种「脾气很好但不好惹」的人。你可以容忍很多事，但一旦越过你的底线，你会让对方知道什么叫后悔。",
+    story: "同事阴阳你，你笑着回了一句，对方半天没反应过来自己被怼了，你转身继续工作。",
+    base: { gentle: 70, passion: 65, power: 78, stable: 88, mind: 95, action: 80 }
+  },
+  rengoku: {
+    name: "炼狱杏寿郎", emoji: "🔥", title: "炎之呼吸 · 燃烧的炎柱",
+    quote: "「燃烧吧，心之所向！」",
+    profile: "你热情、正直、有感染力。你相信努力能改变一切，也愿意为了信念拼尽全力。你的存在让身边的人也变得有力量。",
+    real: "现实里的你，是那种自带能量的人。你做事认真，对人真诚，不喜欢敷衍。有时候你太拼了，身边的人会担心你，记得也照顾好自己。",
+    story: "团队项目卡住时，你主动加班，还给大家带了夜宵，一边吃一边说「没事，我们一起搞定」。",
+    base: { gentle: 80, passion: 95, power: 92, stable: 82, mind: 70, action: 90 }
+  },
+  mitsuri: {
+    name: "甘露寺蜜璃", emoji: "💗", title: "恋之呼吸 · 恋爱与美食至上",
+    quote: "「喜欢就是喜欢，这种心情才不会输！」",
+    profile: "你是「用爱发电」的元气本气。共情力点满，别人的开心能翻倍到你身上，眼泪和饭量一样诚实。可爱是你的外壳，劲劲是你的内核。",
+    real: "现实里的你是团宠 + 氛围组天花板：你一到场，尴尬退散，快乐加倍。情绪来得快去得快，是你保护自己的方式。记得把那份「用力热爱」也分给自己一点点。",
+    story: "同事失恋在楼道抹眼泪，你掏出两根棒棒糖：「哭吧哭吧，哭完这根换那根，甜完我们去吃火锅！」三十分钟后，走廊里传来两个人的大笑声。",
+    base: { gentle: 94, passion: 80, power: 86, stable: 52, mind: 58, action: 82 }
+  },
+  muichiro: {
+    name: "时透无一郎", emoji: "🌫️", title: "霞之呼吸 · 飘忽的天才",
+    quote: "「……哦，是你啊。」",
+    profile: "你看起来漫不经心，其实内心比谁都清楚。你不喜欢被打扰，也不喜欢麻烦别人。你的温柔藏在细节里，只有真正靠近你的人才能看见。",
+    real: "现实里的你，是那种「看起来什么都不在意」的人。但朋友随口提过的烦恼，你都记得。你只是不习惯表达。",
+    story: "朋友生日，你什么都没说，但那天他桌上多了一本他提过一次的书，没有署名。",
+    base: { gentle: 65, passion: 55, power: 85, stable: 85, mind: 90, action: 60 }
+  },
+  tengen: {
+    name: "宇髄天元", emoji: "💎", title: "音之呼吸 · 华丽的音柱",
+    quote: "「华丽地活下去吧。」",
+    profile: "你张扬、自信、有品味。你喜欢把生活过得热闹有趣，也愿意为身边的人撑场面。你不是浮夸，你是真的热爱生活。",
+    real: "现实里的你，是聚会里最会带节奏的人。你懂得享受，也懂得照顾别人的感受。你的「华丽」不是炫耀，是一种生活态度。",
+    story: "朋友第一次上台演讲紧张得手抖，你在台下大喊「华丽地上！」对方噗嗤笑了，反而不怕了。",
+    base: { gentle: 70, passion: 88, power: 85, stable: 75, mind: 78, action: 88 }
+  },
+  gyomei: {
+    name: "悲鸣屿行冥", emoji: "📿", title: "岩之呼吸 · 慈悲的岩柱",
+    quote: "「南无阿弥陀佛。」",
+    profile: "你沉稳、慈悲、有力量。你经历过很多，却依然选择温柔。你不轻易表达情绪，但你的眼泪比谁都真。",
+    real: "现实里的你，是那种「看起来严肃，其实心最软」的人。你不太说漂亮话，但你会默默把事做好，把人照顾好。",
+    story: "看到路边流浪猫，你蹲下来喂了很久，起身时眼睛红红的，谁问你都说是沙子进眼了。",
+    base: { gentle: 88, passion: 70, power: 95, stable: 92, mind: 80, action: 75 }
+  },
+  obanai: {
+    name: "伊黑小芭内", emoji: "🐍", title: "蛇之呼吸 · 蛇柱",
+    quote: "「我不会让任何人再受伤。」",
+    profile: "你说话直接、态度冷，但内心柔软。你习惯用尖锐保护自己，其实你比谁都在意身边的人。",
+    real: "现实里的你，是那种「嘴硬心软」的人。你嘴上说「随便你」，其实早就帮对方想好了退路。你的关心不挂在嘴上，藏在行动里。",
+    story: "朋友说想辞职，你骂了他半小时「冲动」，第二天却帮他整理了一份行业分析发过去。",
+    base: { gentle: 72, passion: 78, power: 85, stable: 78, mind: 82, action: 80 }
+  },
+  sanemi: {
+    name: "不死川实弥", emoji: "🌪️", title: "风之呼吸 · 暴躁的风柱",
+    quote: "「别碍事，滚开。」",
+    profile: "你脾气爆、嘴上狠，但你心里装着你要保护的人。你不擅长温柔，却会用最粗暴的方式把危险挡在外面。",
+    real: "现实里的你，看起来不好惹，其实最容易心软。你对陌生人不耐烦，对在乎的人却愿意做很多。你只是不会好好表达。",
+    story: "弟弟说要去做危险的事，你一巴掌拍过去骂他笨蛋，转身却偷偷帮他准备好了所有装备。",
+    base: { gentle: 60, passion: 90, power: 92, stable: 65, mind: 70, action: 92 }
+  },
+  kanao: {
+    name: "栗花落香奈乎", emoji: "🌸", title: "花之呼吸 · 安静的花",
+    quote: "「……嗯。」",
+    profile: "你安静、顺从、内心细腻。你曾经不知道怎么为自己做决定，但你一直在慢慢学会表达自己。你的温柔里藏着力量。",
+    real: "现实里的你，是那种「不太敢拒绝别人」的人。你总是先考虑别人的感受，常常忘了自己。记得，你也有权利说「不」。",
+    story: "朋友问你今天想吃什么，你愣了一下，小声说「……都可以」。但那天你第一次说出了「其实我想吃拉面」。",
+    base: { gentle: 90, passion: 60, power: 75, stable: 80, mind: 72, action: 55 }
+  },
+  muzan: {
+    name: "鬼舞辻无惨", emoji: "🩸", title: "鬼之始祖 · 绝对的自我",
+    quote: "「我，就是唯一的完美。」",
+    profile: "你目标明确、控制欲强、不甘平庸。你不喜欢被安排，也不喜欢被人拖累。你要的，是掌控自己的命运。",
+    real: "现实里的你，是那种「要么不做，要么做到最好」的人。你对自己要求很高，对别人也一样。有时候太执着会累，记得给自己留点余地。",
+    story: "别人劝你「差不多就行了」，你没说话，转身把方案重新改了第三遍。",
+    base: { gentle: 40, passion: 80, power: 95, stable: 70, mind: 92, action: 85 }
+  }
 };
 
-let scores = { tanjiro: 0, giyu: 0, inosuke: 0, zenitsu: 0 };
+// ============ 状态 ============
+let scores = {};
+let answers = [];   // 记录每题选了谁
 let current = 0;
 
+// 初始化所有角色分数为 0
+Object.keys(RESULTS).forEach(function(k){ scores[k] = 0; });// ============ 授权码验证 ============
 async function verifyCode() {
   const code = document.getElementById('codeInput').value.trim();
   const btn = document.getElementById('authBtn');
@@ -172,47 +731,188 @@ async function verifyCode() {
     err.textContent = '网络错误，请稍后再试';
   } finally {
     btn.disabled = false;
-    btn.textContent = '验证并开始';
+    btn.textContent = '开始测试 ⚔️';
   }
 }
 
+// ============ 渲染题目 ============
 function renderQuestion() {
   const q = QUESTIONS[current];
-  document.getElementById('progress').textContent = '第 ' + (current + 1) + ' / ' + QUESTIONS.length + ' 题';
+  document.getElementById('progressText').textContent = '第 ' + (current + 1) + ' / ' + QUESTIONS.length + ' 题';
+  const percent = Math.round(((current) / QUESTIONS.length) * 100);
+  document.getElementById('progressPercent').textContent = percent + '%';
+  document.getElementById('progressFill').style.width = percent + '%';
   document.getElementById('question').textContent = q.q;
+
   const box = document.getElementById('options');
   box.innerHTML = '';
-  q.a.forEach(function(item) {
+  q.a.forEach(function(item, idx) {
     const div = document.createElement('div');
     div.className = 'opt';
     div.textContent = item[0];
-    div.onclick = function() { choose(item[1]); };
+    // 如果这题已经答过，高亮之前的选择
+    if (answers[current] === idx) {
+      div.style.borderColor = '#c77dff';
+      div.style.background = 'rgba(199,125,255,0.12)';
+    }
+    div.onclick = function() { choose(idx); };
     box.appendChild(div);
   });
+
+  // 上一题按钮状态
+  document.getElementById('prevBtn').disabled = (current === 0);
+  // 下一题提示按钮
+  const nextHint = document.getElementById('nextHint');
+  if (answers[current] !== undefined) {
+    nextHint.textContent = '下一题 →';
+    nextHint.disabled = false;
+    nextHint.onclick = nextQuestion;
+  } else {
+    nextHint.textContent = '选择答案后继续';
+    nextHint.disabled = true;
+    nextHint.onclick = null;
+  }
 }
 
-function choose(key) {
-  scores[key]++;
-  current++;
-  if (current < QUESTIONS.length) {
+// ============ 选择答案 ============
+function choose(idx) {
+  const q = QUESTIONS[current];
+  const role = q.a[idx][1];
+
+  // 如果这题之前答过，先撤销上一次的加分
+  if (answers[current] !== undefined) {
+    const prevRole = q.a[answers[current]][1];
+    scores[prevRole]--;
+  }
+
+  scores[role]++;
+  answers[current] = idx;
+
+  // 高亮
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(function(el, i) {
+    if (i === idx) {
+      el.style.borderColor = '#c77dff';
+      el.style.background = 'rgba(199,125,255,0.12)';
+    } else {
+      el.style.borderColor = 'rgba(160,100,220,0.25)';
+      el.style.background = 'transparent';
+    }
+  });
+
+  // 更新底部按钮
+  const nextHint = document.getElementById('nextHint');
+  nextHint.textContent = '下一题 →';
+  nextHint.disabled = false;
+  nextHint.onclick = nextQuestion;
+
+  // 如果是最后一题，自动改为“查看结果”
+  if (current === QUESTIONS.length - 1) {
+    nextHint.textContent = '查看结果 🎉';
+    nextHint.onclick = showResult;
+  }
+}
+
+// ============ 上一题 / 下一题 ============
+function prevQuestion() {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+}
+
+function nextQuestion() {
+  if (answers[current] === undefined) return;
+  if (current < QUESTIONS.length - 1) {
+    current++;
     renderQuestion();
   } else {
     showResult();
   }
 }
 
+// ============ 显示结果 ============
 function showResult() {
+  // 检查有没有漏题
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    if (answers[i] === undefined) {
+      current = i;
+      renderQuestion();
+      alert('还有题目没答哦，已跳到第 ' + (i + 1) + ' 题');
+      return;
+    }
+  }
+
+  // 找出得分最高的角色
   let top = 'tanjiro';
   let max = -1;
-  for (const k in scores) {
+  Object.keys(scores).forEach(function(k) {
     if (scores[k] > max) { max = scores[k]; top = k; }
-  }
+  });
+
+  const r = RESULTS[top];
+
   document.getElementById('quizCard').classList.add('hidden');
   document.getElementById('resultCard').classList.remove('hidden');
-  document.getElementById('resultName').textContent = RESULTS[top].name;
-  document.getElementById('resultDesc').textContent = RESULTS[top].desc;
+
+  document.getElementById('resultEmoji').textContent = r.emoji;
+  document.getElementById('resultTitle').textContent = r.title;
+  document.getElementById('resultName').textContent = r.name;
+  document.getElementById('resultQuote').textContent = r.quote;
+  document.getElementById('resultProfile').textContent = r.profile;
+  document.getElementById('resultLine').textContent = r.quote;
+  document.getElementById('resultReal').textContent = r.real;
+  document.getElementById('resultStory').textContent = r.story;
+
+  // 六维：以角色 base 值 + 一点答题浮动
+  const base = r.base;
+  const fluctuate = function(v) {
+    return Math.max(20, Math.min(99, v + Math.floor(Math.random() * 9) - 4));
+  };
+  const stats = [
+    { label: '温柔', value: fluctuate(base.gentle) },
+    { label: '热血', value: fluctuate(base.passion) },
+    { label: '战斗力', value: fluctuate(base.power) },
+    { label: '情绪稳定', value: fluctuate(base.stable) },
+    { label: '心眼', value: fluctuate(base.mind) },
+    { label: '行动力', value: fluctuate(base.action) }
+  ];
+
+  const statsBox = document.getElementById('statsBox');
+  statsBox.innerHTML = '';
+  stats.forEach(function(s) {
+    const row = document.createElement('div');
+    row.className = 'stat-row';
+    row.innerHTML =
+      '<div class="stat-label">' + s.label + '</div>' +
+      '<div class="stat-bar"><div class="stat-fill" style="width:' + s.value + '%"></div></div>' +
+      '<div class="stat-num">' + s.value + '</div>';
+    statsBox.appendChild(row);
+  });
+
+  // 记录当前结果，供分享用
+  window.__resultText = '我在《鬼灭之刃人物测试》里测出来是：' +
+    r.emoji + ' ' + r.name + '（' + r.title + '）\n' +
+    r.quote + '\n' +
+    '你也来测测你是鬼灭里的谁？\n' +
+    window.location.href;
 }
 
+// ============ 分享结果 ============
+function shareResult() {
+  const text = window.__resultText || '我在《鬼灭之刃人物测试》里测出了一个结果！';
+  if (navigator.share) {
+    navigator.share({ title: '鬼灭之刃人物测试', text: text }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('结果已复制到剪贴板，去粘贴给朋友吧！');
+    }).catch(function() {
+      alert('复制失败，请手动截图分享。');
+    });
+  }
+}
+
+// 回车直接验证
 document.getElementById('codeInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') verifyCode();
 });

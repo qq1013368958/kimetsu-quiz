@@ -327,335 +327,75 @@
 
 <div class="petals" id="petals"></div>
 
-<div class="wrap"><!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鬼灭之刃人物测试</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+<div class="wrap">  <div id="authCard" class="card">
+    <h1>鬼灭之刃人物测试</h1>
+    <p class="sub">
+      36 道题 · 约 3 分钟 · 16 位角色<br>
+      输入授权码，测出你灵魂里住着哪位剑士
+    </p >
+    <input id="codeInput" type="text" placeholder="请输入授权码" maxlength="20">
+    <button id="authBtn" onclick="verifyCode()">开始测试 ⚔️</button>
+    <p class="err" id="authErr"></p >
+  </div>
 
-  body {
-    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-    background: #05070f;
-    color: #e8e8e8;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    position: relative;
-    overflow-x: hidden;
-  }
+  <div id="quizCard" class="card hidden">
+    <div class="topbar">
+      <span id="progressText">第 1 / 36 题</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <p class="q" id="question"></p >
+    <div id="options"></div>
+    <div class="nav">
+      <button id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+      <button id="nextHint" disabled>选择答案后继续</button>
+    </div>
+  </div>
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(circle at 50% 30%, rgba(255, 200, 100, 0.18), transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(120, 160, 255, 0.12), transparent 55%),
-      radial-gradient(circle at 10% 90%, rgba(80, 40, 120, 0.35), transparent 50%),
-      radial-gradient(circle at 90% 85%, rgba(40, 60, 120, 0.35), transparent 50%),
-      linear-gradient(180deg, #05070f 0%, #0a1020 50%, #05070f 100%);
-    z-index: -2;
-  }
+  <div id="resultCard" class="card hidden">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-quote" id="resultQuote"></div>
 
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 12% 20%, rgba(255,255,255,0.9), transparent),
-      radial-gradient(1.5px 1.5px at 28% 45%, rgba(255,220,150,0.8), transparent),
-      radial-gradient(1px 1px at 45% 15%, rgba(255,255,255,0.7), transparent),
-      radial-gradient(2px 2px at 62% 35%, rgba(255,200,100,0.9), transparent),
-      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,0.8), transparent),
-      radial-gradient(1px 1px at 88% 60%, rgba(200,220,255,0.7), transparent),
-      radial-gradient(1.5px 1.5px at 18% 75%, rgba(255,220,150,0.7), transparent),
-      radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6), transparent),
-      radial-gradient(2px 2px at 72% 92%, rgba(255,200,100,0.7), transparent),
-      radial-gradient(1.5px 1.5px at 35% 92%, rgba(200,220,255,0.6), transparent);
-    animation: starTwinkle 5s ease-in-out infinite;
-    z-index: -1;
-  }
+    <div class="block">
+      <div class="block-title">📜 角色画像</div>
+      <div class="block-content" id="resultProfile"></div>
+    </div>
 
-  @keyframes starTwinkle {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+    <div class="block">
+      <div class="block-title">💬 名台词</div>
+      <div class="block-content" id="resultLine"></div>
+    </div>
 
-  .petals {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .petal {
-    position: absolute;
-    top: -20px;
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(circle at 30% 30%, #ffd6e8, #ff9ec4);
-    border-radius: 50% 0 50% 0;
-    opacity: 0.7;
-    animation: petalFall linear infinite;
-  }
-  @keyframes petalFall {
-    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.8; }
-    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
+    <div class="block">
+      <div class="block-title">🏙️ 现实里的你</div>
+      <div class="block-content" id="resultReal"></div>
+    </div>
 
-  .wrap { width: 100%; max-width: 560px; position: relative; z-index: 1; }
+    <div class="block">
+      <div class="block-title">🎬 小剧场</div>
+      <div class="block-content" id="resultStory"></div>
+    </div>
 
-  .card {
-    background: rgba(12, 14, 24, 0.94);
-    border: 1px solid rgba(180, 140, 70, 0.35);
-    border-radius: 16px;
-    padding: 30px 24px;
-    box-shadow:
-      0 0 40px rgba(255, 190, 90, 0.08),
-      inset 0 0 30px rgba(255, 190, 90, 0.03);
-    position: relative;
-  }
-  .card::before {
-    content: "";
-    position: absolute;
-    top: 8px; left: 8px;
-    width: 22px; height: 22px;
-    border-top: 1.5px solid rgba(220, 170, 80, 0.7);
-    border-left: 1.5px solid rgba(220, 170, 80, 0.7);
-    border-top-left-radius: 8px;
-    pointer-events: none;
-  }
-  .card::after {
-    content: "";
-    position: absolute;
-    bottom: 8px; right: 8px;
-    width: 22px; height: 22px;
-    border-bottom: 1.5px solid rgba(220, 170, 80, 0.7);
-    border-right: 1.5px solid rgba(220, 170, 80, 0.7);
-    border-bottom-right-radius: 8px;
-    pointer-events: none;
-  }
+    <div class="block">
+      <div class="block-title">📊 六维速览</div>
+      <div id="statsBox"></div>
+    </div>
 
-  h1 {
-    font-size: 26px;
-    text-align: center;
-    margin-bottom: 10px;
-    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-  }
+    <button style="margin-top:10px" onclick="shareResult()">分享结果 📤</button>
+    <button style="margin-top:10px; background: rgba(255,255,255,0.06); border:1px solid rgba(180,140,70,0.3); color:#d8dce8; font-weight:normal;" onclick="location.reload()">重新测试 🔄</button>
+    <p class="sub" style="margin-top:16px; font-size:12px;">
+      云间小答卷 · 娱乐向同人性格测试 · 与官方无关<br>
+      结果仅供玩梗参考，数据只存在你自己的设备里 🔒
+    </p >
+  </div>
 
-  .sub {
-    text-align: center;
-    color: #9aa0b5;
-    font-size: 13px;
-    margin-bottom: 24px;
-    line-height: 1.7;
-  }
+</div>
 
-  input {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 1px solid rgba(180, 140, 70, 0.35);
-    background: rgba(10, 12, 22, 0.9);
-    color: #fff;
-    font-size: 16px;
-    letter-spacing: 3px;
-    text-align: center;
-    outline: none;
-    margin-bottom: 16px;
-    transition: 0.2s;
-  }
-  input:focus {
-    border-color: rgba(255, 200, 100, 0.8);
-    box-shadow: 0 0 16px rgba(255, 200, 100, 0.25);
-  }
-
-  button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
-    color: #1a1208;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-    letter-spacing: 1px;
-  }
-  button:hover { opacity: 0.9; box-shadow: 0 0 22px rgba(255, 200, 100, 0.35); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .err {
-    color: #ff6b6b;
-    text-align: center;
-    font-size: 13px;
-    margin-top: 12px;
-    min-height: 18px;
-  }
-
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: #9aa0b5;
-    margin-bottom: 12px;
-  }
-  .progress-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 22px;
-  }
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
-    transition: width 0.3s ease;
-  }
-
-  .q {
-    font-size: 18px;
-    line-height: 1.7;
-    margin-bottom: 22px;
-    color: #fff;
-  }
-
-  .opt {
-    padding: 15px 18px;
-    border: 1px solid rgba(120, 130, 160, 0.35);
-    border-radius: 12px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: 0.25s;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #d8dce8;
-    background: rgba(20, 22, 34, 0.6);
-  }
-  .opt:hover {
-    border-color: rgba(255, 200, 100, 0.75);
-    background: rgba(255, 200, 100, 0.08);
-    color: #fff;
-    transform: translateX(3px);
-    box-shadow: 0 0 18px rgba(255, 200, 100, 0.15);
-  }
-
-  .nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 18px;
-  }
-  .nav button {
-    width: auto;
-    padding: 10px 22px;
-    font-size: 14px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(180,140,70,0.3);
-    color: #d8dce8;
-    font-weight: normal;
-  }
-  .nav button:hover { background: rgba(255,200,100,0.12); }
-  .nav button:disabled { opacity: 0.25; }
-
-  .result-emoji {
-    font-size: 64px;
-    text-align: center;
-    margin-bottom: 6px;
-    filter: drop-shadow(0 0 20px rgba(255,200,100,0.5));
-  }
-  .result-title {
-    text-align: center;
-    font-size: 15px;
-    color: #d4a24c;
-    letter-spacing: 4px;
-    margin-bottom: 6px;
-  }
-  .result-name {
-    font-size: 30px;
-    text-align: center;
-    margin-bottom: 14px;
-    background: linear-gradient(90deg, #ffd280, #ffe8b0, #d4a24c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-  }
-  .result-quote {
-    text-align: center;
-    color: #d4a24c;
-    font-size: 14px;
-    margin-bottom: 22px;
-    font-style: italic;
-  }
-  .block {
-    background: rgba(20, 22, 34, 0.6);
-    border: 1px solid rgba(120, 130, 160, 0.25);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 14px;
-  }
-  .block-title {
-    color: #d4a24c;
-    font-size: 14px;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-  }
-  .block-content {
-    color: #c8ccd8;
-    font-size: 14px;
-    line-height: 1.9;
-  }
-
-  .stat-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  .stat-label {
-    width: 70px;
-    color: #9aa0b5;
-    flex-shrink: 0;
-  }
-  .stat-bar {
-    flex: 1;
-    height: 8px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 0 10px;
-  }
-  .stat-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #d4a24c, #ffe8b0);
-    border-radius: 4px;
-  }
-  .stat-num {
-    width: 34px;
-    text-align: right;
-    color: #ffd280;
-    font-weight: bold;
-  }
-
-  .hidden { display: none; }
-</style>
-</head>
-<body>
-
-<div class="petals" id="petals"></div>
-<div class="wrap">// ============ 36 道题库 ============
+<script>// ============ 36 道题库 ============
 const QUESTIONS = [
   { q: "半夜刷到恐怖片片段，接下来你会——", a: [
     ["看完才反应过来：哦，刚才在演什么？", "muichiro"],
